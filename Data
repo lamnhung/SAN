@@ -1,9 +1,23 @@
-Source #1
-Where did you download the data (e.g., a web URL)?
-How was the data collected or generated? Make sure to explain who collected the data (not necessarily the same people that host the data), and who or what the data is about?
-How many observations (rows) are in your data?
-How many features (columns) are in the data?
-What questions (from above) can be answered using the data in this dataset?
+#Source #1
+
+#Where did you download the data (e.g., a web URL)?
+#I downloaded the data from the National Cancer Institute. (NIH). (https://seer.cancer.gov/archive/csr/1975_2018/browse_csr.php?sectionSEL=1&pageSEL=sect_01_table.20)
+
+#How was the data collected or generated? Make sure to explain who collected the data (not necessarily the same people that host the data), and who or what the data is about?
+#The data was collected by the SEER Cancer Statistics Review. US mortality uses census data and calculates rates per 100,000. SEER 21 collects data from certain areas, but not as wide as US/CDC data.
+
+#How many observations (rows) are in your data?
+#The rows included in the data is cancer site and sex. The rows specify the type of cancer and sex of the person. It includes 24 types of cancers and each group counts the total people, female, and male. It has 72 rows in total. 
+
+#How many features (columns) are in the data?
+#There are four columns in the data: Cancer Site, Sex, Total United States, and SEER 21 Areas. Within Total US and Seer 21 Areas includes: total, white, black, American Indian/Alaska Native, Asian/Pacific Islander, and Hispanic.
+
+#What questions (from above) can be answered using the data in this dataset?
+#What group is disproprotionately affected by cancer?
+#What group has the highest/lowest mortality rate?
+#What is the rank of group from highest to lowest and lowest to highest by mortality rate?
+#Is there a difference between male and female cancer mortality rates?
+#Is there a group of people who are more affected by certian cancers?
 
 Source #2
 Where did you download the data (e.g., a web URL)?
