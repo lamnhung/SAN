@@ -20,11 +20,23 @@
 #Is there a group of people who are more affected by certian cancers?
 
 Source #2
-Where did you download the data (e.g., a web URL)?
-How was the data collected or generated? Make sure to explain who collected the data (not necessarily the same people that host the data), and who or what the data is about?
-How many observations (rows) are in your data?
-How many features (columns) are in the data?
+#Where did you download the data (e.g., a web URL)?
+#I downloaded the data from kaggle. https://www.kaggle.com/datasets/dannellyz/cancer-incidence-totals-and-rates-per-us-county?resource=download
+
+#How was the data collected or generated? Make sure to explain who collected the data (not necessarily the same people that host the data), and who or what the data is about?
+#The data was collected from NIH's National Cancer Institutes State Cancer Profiles, notably their incidence tables. The data is about the State Cancer Profiles that offers a framework for uniformly describing the cancer burden in order to spur action, incorporate surveillance into cancer control strategy, define regions and demographic groups, and highlight health disparities. This dataset emphasizes on cancer sites where evidence-based control treatments are available. 
+
+#How many observations (rows) are in your data?
+#There are 3008 rows in this dataset.
+
+#How many features (columns) are in the data?
+#There are 11 columns in this dataset which include: US counties, incidence rate per 100k, average annual count, recent trends, five year incidence change rate, state FIPS, incidence rate per 100k low 95, incidence rate per 100k high 95, five year incidence change rate low 95, and five year incidence change rate high 95. 
+
 What questions (from above) can be answered using the data in this dataset?
+#Which county has the highest/lowest annual count of cancer diagnosis in the US?
+#Which counties has had a falling trend movement over the past 5 years?
+#Which counties has had a stable trend movement over the past 5 years?
+#Which counties has had a rising trend movement over the past 5 years?
 
 Source #3
 Where did you download the data (e.g., a web URL)?
