@@ -38,9 +38,28 @@ What questions (from above) can be answered using the data in this dataset?
 #Which counties has had a stable trend movement over the past 5 years?
 #Which counties has had a rising trend movement over the past 5 years?
 
+
 Source #3
 Where did you download the data (e.g., a web URL)?
-How was the data collected or generated? Make sure to explain who collected the data (not necessarily the same people that host the data), and who or what the data is about?
+# I found this datasource on kaggle which is an online community platform for data scientists and machine learners. On this platform you're able to search for thousands of high-quality and valued dataset to your liking to best firt your research questions.  
+
+#https://www.kaggle.com/datasets/asdsadasdsadsa/seer-breast-cancer-dataset
+
+How was the data collected or generated? Make sure to explain who collected the data (not necessarily
+the same people that host the data), and who or what the data is about?
+
+#The dataset I had found came from the SEER database and it on breast cancer statistics. SEER (Surveillance, Epidemiology and End Results) program provides information on cancer statistics from 19 different registeries that are located across the country. The aim of SEER is to work to reduce cancer burden amongst those living in the United States. Data from SEER is collected  routinely on patient demographics, primary tumor site and morphology, stage of diagonsis, and first course treatment. SEER had collected incidnece and survival rates for about 48 percent of the country and accounts for several demographics (White, African American, Hispanic, American Indian and Alaskan Native). This bladder cancer data was collected from those multiple registries and complied to include various race demographics and cancer progression.
+
 How many observations (rows) are in your data?
+# This dataset accounts for 4,205 observations/ rows on patients that have been diagonosed for breast cancer. 
+
 How many features (columns) are in the data?
+
+# There are 16 columns to this dataset (Age, Race, Martial Status, T Stage, N Stage, 6th Stage, Grade, A Stage, Tumor Size, Estrogen Staus, Progesteron Regional Node Examined, Regional Node Positive, Survival Months, and Status)
+
 What questions (from above) can be answered using the data in this dataset?
+# What are disaprities in Bladder Cancer between women of color and white women according to incidence rates given in the graph?
+# What are disparties between white women and women of color according to the stage of diagnosis?
+# What is the difference in mortality rate for white women and women of color?
+# What disparites lay in N-Stage rates for women of color and white women?
+# What disparites lay in the T-Stage rate for women of color and white women?
