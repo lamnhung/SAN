@@ -10,5 +10,283 @@
 
 #Insert Summary Information Script Below
 
+library(dplyr)
+library(tidyverse)
+library(stringr)
+
+seer_df <- read.csv("SEER_Breast_Cancer Dataset.csv")
+seer_df$X <- NULL 
+
+# A function that takes in a dataset and returns a list of info about it:
+summary_info <- list()
+summary_info$num_observations <- nrow(seer_df)
+summary_info$some_max_value <- seer_df %>%
+  filter(some_var == max(some_var, na.rm = T)) %>%
+  select(some_label)
+
+#Average Tumor Size for White/Black/Other 
+race_tumor <- select(seer_df, "Race", "Tumor.Size")
+white_df <- filter(race_tumor, grepl("White", Race, ignore.case = TRUE))
+avg_white_tumor <- mean(white_df$Tumor.Size, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_white_tumor_percent <- specify_decimal(avg_white_tumor, 0)
+sprintf("The race White had an average tumor size of %s", avg_white_tumor_percent)
+
+
+black_df <- filter(race_tumor, grepl("Black", Race, ignore.case = TRUE))
+avg_black_tumor <- mean(black_df$Tumor.Size, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_black_tumorpercent <- specify_decimal(avg_black_tumor, 0)
+sprintf("The race White had an average tumor size of %s", avg_black_tumorpercent)
+
+other_df <- filter(race_tumor, grepl("Other", Race, ignore.case = TRUE))
+avg_other_tumor <- mean(other_df$Tumor.Size, na.rm = TRUE)
+print(avg_other_tumor)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_other_tumorpercent <- specify_decimal(avg_other_tumor, 0)
+sprintf("The race White had an average tumor size of %s", avg_other_tumorpercent)
+
+
+
+#Average Age for Status (Alive) for White/Black/Other
+age_status <- select(seer_df, "Age", "Race", "Status")
+white_avg_df <- filter(age_status, grepl("White", Race, ignore.case = TRUE))
+white_alive_df <- filter(white_avg_df, grepl("Alive", Status, ignore.case = TRUE))
+avg_alive_white <- mean(white_alive_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_alive_whitepercent <- specify_decimal(avg_alive_white, 0)
+sprintf("The race White had an average age for the Status Alive of %s", avg_alive_whitepercent)
+
+
+black_avg_df <- filter(age_status, grepl("Black", Race, ignore.case = TRUE))
+black_alive_df <- filter(black_avg_df, grepl("Alive", Status, ignore.case = TRUE))
+avg_alive_black <- mean(black_alive_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_alive_blackpercent <- specify_decimal(avg_alive_black, 0)
+sprintf("The race Black had an average age for the Status Alive of %s", avg_alive_blackpercent)
+
+other_avg_df <- filter(age_status, grepl("Other", Race, ignore.case = TRUE))
+other_alive_df <- filter(other_avg_df, grepl("Alive", Status, ignore.case = TRUE))
+avg_alive_other <- mean(other_alive_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_alive_otherpercent <- specify_decimal(avg_alive_other, 0)
+sprintf("The race Other had an average age for the Status Alive of %s", avg_alive_otherpercent)
+
+#Average Age for Status (Dead) for White/Black/Other
+age_status <- select(seer_df, "Age", "Race", "Status")
+white_avg_df <- filter(age_status, grepl("White", Race, ignore.case = TRUE))
+white_dead_df <- filter(white_avg_df, grepl("Dead", Status, ignore.case = TRUE))
+avg_dead_white <- mean(white_dead_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_dead_whitepercent <- specify_decimal(avg_dead_white, 0)
+sprintf("The race White had an average age for the Status Dead of %s", avg_dead_whitepercent)
+
+black_avg_df <- filter(age_status, grepl("Black", Race, ignore.case = TRUE))
+black_dead_df <- filter(black_avg_df, grepl("Dead", Status, ignore.case = TRUE))
+avg_dead_black <- mean(black_dead_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_dead_blackpercent <- specify_decimal(avg_dead_black, 0)
+sprintf("The race Black had an average age for the Status Dead of %s", avg_dead_blackpercent)
+
+other_avg_df <- filter(age_status, grepl("Other", Race, ignore.case = TRUE))
+other_dead_df <- filter(other_avg_df, grepl("Dead", Status, ignore.case = TRUE))
+avg_dead_other <- mean(other_dead_df$Age, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_dead_otherpercent <- specify_decimal(avg_dead_other, 0)
+sprintf("The race Other had an average age for the Status Dead of %s", avg_dead_otherpercent)
+
+#Proportion Poor/moderate/well differentiated grades for White/Black/Other mortality
+
+#Proportion of death to alive status for poorly differentiated grades (White)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_white <- filter(grade_df, grepl("White", Race, ignore.case = TRUE))
+poorly_white <- filter(grade_white, grepl("Poorly differentiated; Grade III", Grade, ignore.case = TRUE))
+dead_white <- filter(poorly_white, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_white <- nrow(dead_white)
+print(num_dead_white)
+
+alive_white <- filter(poorly_white, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_white <- nrow(alive_white)
+print(num_alive_white)
+
+prop_dead_to_alive <- (num_dead_white/num_alive_white)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_percent <- specify_decimal(prop_dead_to_alive, 0)
+sprintf("The mortality rate for the race White in the Poorly differentiated; Grade III class is %s percent", prop_dead_to_alive_percent)
+
+
+#Proportion of death to alive status for moderately differentiated grades (White)
+
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_white <- filter(grade_df, grepl("White", Race, ignore.case = TRUE))
+mod_white <- filter(grade_white, grepl("Moderately differentiated; Grade II", Grade, ignore.case = TRUE))
+dead_white_mod <- filter(mod_white, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_white_mod <- nrow(dead_white_mod)
+print(num_dead_white_mod)
+
+alive_white_mod <- filter(mod_white, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_white_mod <- nrow(alive_white_mod)
+print(num_alive_white_mod)
+
+prop_dead_to_alive_mod <- (num_dead_white_mod/num_alive_white_mod)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_mod_percent <- specify_decimal(prop_dead_to_alive_mod, 0)
+sprintf("The mortality rate for the race White in the Moderately differentiated; Grade II class is %s percent", prop_dead_to_alive_mod_percent)
+
+
+#Proportion of death to alive status for well differentiated grades (White)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_white <- filter(grade_df, grepl("White", Race, ignore.case = TRUE))
+well_white <- filter(grade_white, grepl("Well differentiated; Grade I", Grade, ignore.case = TRUE))
+dead_white_well <- filter(well_white, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_white_well <- nrow(dead_white_well)
+print(num_dead_white_well)
+
+alive_white_well <- filter(well_white, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_white_well <- nrow(alive_white_well)
+print(num_alive_white_well)
+
+prop_dead_to_alive_well <- (num_dead_white_well/num_alive_white_well)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_well_percent <- specify_decimal(prop_dead_to_alive_well, 0)
+sprintf("The mortality rate for the race White in the Well differentiated; Grade I class is %s percent", prop_dead_to_alive_well_percent)
+
+
+#Proportion of death to alive status for poorly differentiated grades (Black)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_black <- filter(grade_df, grepl("Black", Race, ignore.case = TRUE))
+poorly_black <- filter(grade_black, grepl("Poorly differentiated; Grade III", Grade, ignore.case = TRUE))
+dead_black <- filter(poorly_black, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_black <- nrow(dead_black)
+print(num_dead_black)
+
+alive_black <- filter(poorly_black, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_black <- nrow(alive_black)
+print(num_alive_black)
+
+prop_dead_to_alive_black <- (num_dead_black/num_alive_black)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_black_percent <- specify_decimal(prop_dead_to_alive_black, 0)
+sprintf("The mortality rate for the race Black in the Poorly differentiated; Grade III class is %s percent", prop_dead_to_alive_black_percent)
+
+
+
+#Proportion of death to alive status for moderately differentiated grades (Black)
+
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_black <- filter(grade_df, grepl("Black", Race, ignore.case = TRUE))
+mod_black <- filter(grade_black, grepl("Moderately differentiated; Grade II", Grade, ignore.case = TRUE))
+dead_black_mod <- filter(mod_black, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_black_mod <- nrow(dead_black_mod)
+print(num_dead_black_mod)
+
+alive_black_mod <- filter(mod_black, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_black_mod <- nrow(alive_black_mod)
+print(num_alive_black_mod)
+
+prop_dead_to_alive_mod_black <- (num_dead_black_mod/num_alive_black_mod)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_mod_black_percent <- specify_decimal(prop_dead_to_alive_mod_black, 0)
+sprintf("The mortality rate for the race Black in the Moderately differentiated; Grade II class is %s percent", prop_dead_to_alive_mod_black_percent)
+
+
+#Proportion of death to alive status for well differentiated grades (Black)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_black <- filter(grade_df, grepl("Black", Race, ignore.case = TRUE))
+well_black <- filter(grade_black, grepl("Well differentiated; Grade I", Grade, ignore.case = TRUE))
+dead_black_well <- filter(well_black, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_black_well <- nrow(dead_black_well)
+print(num_dead_black_well)
+
+alive_black_well <- filter(well_black, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_black_well <- nrow(alive_black_well)
+print(num_alive_black_well)
+
+prop_dead_to_alive_well_black <- (num_dead_black_well/num_alive_black_well)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_well_black_percent <- specify_decimal(prop_dead_to_alive_well_black, 0)
+sprintf("The mortality rate for the race Black in the Well differentiated; Grade I class is %s percent", prop_dead_to_alive_well_black_percent)
+
+
+#Proportion of death to alive status for poorly differentiated grades (Other)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_other <- filter(grade_df, grepl("Other", Race, ignore.case = TRUE))
+poorly_other <- filter(grade_other, grepl("Poorly differentiated; Grade III", Grade, ignore.case = TRUE))
+dead_other <- filter(poorly_other, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_other <- nrow(dead_other)
+print(num_dead_other)
+
+alive_other <- filter(poorly_other, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_other <- nrow(alive_other)
+print(num_alive_other)
+
+prop_dead_to_alive_other <- (num_dead_other/num_alive_other)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_other_percent <- specify_decimal(prop_dead_to_alive_other, 0)
+sprintf("The mortality rate for the race Other in the Poorly differentiated; Grade III class is %s percent", prop_dead_to_alive_other_percent)
+
+
+#Proportion of death to alive status for moderately differentiated grades (Other)
+
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_other <- filter(grade_df, grepl("Other", Race, ignore.case = TRUE))
+mod_other <- filter(grade_other, grepl("Moderately differentiated; Grade II", Grade, ignore.case = TRUE))
+dead_other_mod <- filter(mod_other, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_other_mod <- nrow(dead_other_mod)
+print(num_dead_other_mod)
+
+alive_other_mod <- filter(mod_other, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_other_mod <- nrow(alive_other_mod)
+print(num_alive_other_mod)
+
+prop_dead_to_alive_mod_other <- (num_dead_other_mod/num_alive_other_mod)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_mod_other_percent <- specify_decimal(prop_dead_to_alive_mod_other, 0)
+sprintf("The mortality rate for the race Other in the Moderately differentiated; Grade II class is %s percent", prop_dead_to_alive_mod_other_percent)
+
+
+#Proportion of death to alive status for well differentiated grades (Other)
+grade_df <- select(seer_df, "Race", "Grade", "Status")
+grade_other <- filter(grade_df, grepl("Other", Race, ignore.case = TRUE))
+well_other <- filter(grade_other, grepl("Well differentiated; Grade I", Grade, ignore.case = TRUE))
+dead_other_well <- filter(well_other, grepl("Dead", Status, ignore.case = TRUE))
+num_dead_other_well <- nrow(dead_other_well)
+print(num_dead_other_well)
+
+alive_other_well <- filter(well_other, grepl("Alive", Status, ignore.case = TRUE))
+num_alive_other_well <- nrow(alive_other_well)
+print(num_alive_other_well)
+
+prop_dead_to_alive_well_other <- (num_dead_other_well/num_alive_other_well)*100
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+prop_dead_to_alive_well_other_percent <- specify_decimal(prop_dead_to_alive_well_other, 0)
+sprintf("The mortality rate for the race Other in the Well differentiated; Grade I class is %s percent", prop_dead_to_alive_well_other_percent)
+
+
+#Average Survival Months for White/Black/Other
+survival_race <- select(seer_df, "Race", "Survival.Months")
+survival_white <- filter(survival_race, grepl("White", Race, ignore.case = TRUE))
+avg_survival_white <- mean(survival_white$Survival.Months, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_survival_white_percent <- specify_decimal(avg_survival_white, 0)
+sprintf("The race White had an average of %s survival months", avg_survival_white_percent)
+
+
+
+survival_race <- select(seer_df, "Race", "Survival.Months")
+survival_black <- filter(survival_race, grepl("Black", Race, ignore.case = TRUE))
+avg_survival_black <- mean(survival_black$Survival.Months, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_survival_black_percent <- specify_decimal(avg_survival_black, 0)
+sprintf("The race Black had an average of %s survival months", avg_survival_black_percent)
+
+survival_race <- select(seer_df, "Race", "Survival.Months")
+survival_other <- filter(survival_race, grepl("Other", Race, ignore.case = TRUE))
+avg_survival_other <- mean(survival_other$Survival.Months, na.rm = TRUE)
+specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
+avg_survival_other_percent <- specify_decimal(avg_survival_other, 0)
+sprintf("The race Other had an average of %s survival months", avg_survival_other_percent)
+
+
 #Insert Aggregate Table Script Below
 
