@@ -3,6 +3,8 @@
 #The SEER Breast Cancer Dataset shows cancer patient's age, race, martial status, stages, grade, tumor size, estrogen/progesterone status, regional node, survival months, and life status (dead or alive). The data is collected by SEER which provides information on population-based cancer statistics. 
 
 #Write a summary paragraph that includes information calculated by your summary information function
+#The summary information script includes information about the number of rows/columns (observations) about the Seer Breast Cancer dataset. Within the Summary Information Script is 5 differenct calculated values. These 5 calculated values are: average tumor size for White/Black/Other, Average Age for the status alive/dead for White/Black/Other, the proportion of poor/moderate/well differentiated grades to mortality (status dead) for White/Black/Other, and average survival months for White/Black/Other. These calculated values are important because it can help us see the major differences between each race group to make comparisons. We are looking to see if there are any disparities in Breast Cancer and these calculated values help us see the similarities and or differences between the groups. 
+
 
 #Render your table and describe pertinent observations found in it
 
