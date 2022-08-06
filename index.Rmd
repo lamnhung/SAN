@@ -3,10 +3,13 @@
 #The SEER Breast Cancer Dataset shows cancer patient's age, race, martial status, stages, grade, tumor size, estrogen/progesterone status, regional node, survival months, and life status (dead or alive). The data is collected by SEER which provides information on population-based cancer statistics. 
 
 #Write a summary paragraph that includes information calculated by your summary information function
+
 #The summary information script includes information about the number of rows/columns (observations) about the Seer Breast Cancer dataset. Within the Summary Information Script is 5 differenct calculated values. These 5 calculated values are: average tumor size for White/Black/Other, Average Age for the status alive/dead for White/Black/Other, the proportion of poor/moderate/well differentiated grades to mortality (status dead) for White/Black/Other, and average survival months for White/Black/Other. These calculated values are important because it can help us see the major differences between each race group to make comparisons. We are looking to see if there are any disparities in Breast Cancer and these calculated values help us see the similarities and or differences between the groups. 
 
 
 #Render your table and describe pertinent observations found in it
+
+#Our aggregate table script features two tables that display the average tumor sizes and survival months for each race (White, Black, and Other). Some pertinent we found was although the average tumor size was about the same accross all races, the average survival months were drastically different. The average survival months for the Black group was much lower compared to the Other and White groups. The Black's average survival months is 67 months while the other group is 73 and the white group is 72 months. While looking through the data, we noticed that there were much less observations for the Other race group throughout. We think it is important to acknowledge that this will have an effect on the analysis, as it will not be as good of a comparison compared to the Black and White groups becuase they have much more observations. 
 
 #Describe the purpose of each chart (e.g., "this chart was intended to show the relationship between..."), render each chart, and describe pertinent observations found in each chart
 
@@ -289,6 +292,26 @@ specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
 avg_survival_other_percent <- specify_decimal(avg_survival_other, 0)
 sprintf("The race Other had an average of %s survival months", avg_survival_other_percent)
 
+#Aggregate Table Script
 
-#Insert Aggregate Table Script Below
+library(dplyr)
+
+seer_df <- read.csv("SEER_Breast_Cancer Dataset.csv")
+seer_df$X <- NULL 
+#Aggregated table that shows average tumor size for Race White/Black/Other
+avg_tumor_size <- summarise_at(group_by(seer_df, Race), vars(Tumor.Size), funs(mean(.,na.rm=TRUE)))
+round_avg_tumor_size <- avg_tumor_size %>%
+  mutate_if(is.numeric,
+            round,
+            digits = 1)
+View(round_avg_tumor_size)
+
+#Aggregated table that shows average survival months for Race White/Black/Other
+avg_survival <- summarise_at(group_by(seer_df, Race), vars(Survival.Months), funs(mean(.,na.rm=TRUE)))
+round_avg_survival<- avg_survival %>%
+  mutate_if(is.numeric,
+            round,
+            digits = 0)
+View(round_avg_survival)
+
 
