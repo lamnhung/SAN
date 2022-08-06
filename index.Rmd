@@ -18,11 +18,11 @@ seer_df <- read.csv("SEER_Breast_Cancer Dataset.csv")
 seer_df$X <- NULL 
 
 # A function that takes in a dataset and returns a list of info about it:
-summary_info <- list()
-summary_info$num_observations <- nrow(seer_df)
-summary_info$some_max_value <- seer_df %>%
-  filter(some_var == max(some_var, na.rm = T)) %>%
-  select(some_label)
+summary_info <- function(seer_df){
+  summary_info_list <- list(seer_df)
+  num_observations_row <- nrow(seer_df)
+  num_observations_col <- ncol(seer_df)
+}
 
 #Average Tumor Size for White/Black/Other 
 race_tumor <- select(seer_df, "Race", "Tumor.Size")
@@ -37,14 +37,14 @@ black_df <- filter(race_tumor, grepl("Black", Race, ignore.case = TRUE))
 avg_black_tumor <- mean(black_df$Tumor.Size, na.rm = TRUE)
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
 avg_black_tumorpercent <- specify_decimal(avg_black_tumor, 0)
-sprintf("The race White had an average tumor size of %s", avg_black_tumorpercent)
+sprintf("The race Black had an average tumor size of %s", avg_black_tumorpercent)
 
 other_df <- filter(race_tumor, grepl("Other", Race, ignore.case = TRUE))
 avg_other_tumor <- mean(other_df$Tumor.Size, na.rm = TRUE)
 print(avg_other_tumor)
 specify_decimal <- function(x, k) trimws(format(round(x, k), nsmall=k))
 avg_other_tumorpercent <- specify_decimal(avg_other_tumor, 0)
-sprintf("The race White had an average tumor size of %s", avg_other_tumorpercent)
+sprintf("The race Other had an average tumor size of %s", avg_other_tumorpercent)
 
 
 
