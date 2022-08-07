@@ -13,7 +13,7 @@
 
 #Describe the purpose of each chart (e.g., "this chart was intended to show the relationship between..."), render each chart, and describe pertinent observations found in each chart
 
-This chart
+#Each individual chart purpose is located in each Chart Script 1-3.
 
 #Insert Summary Information Script Below
 
