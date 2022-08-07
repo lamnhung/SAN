@@ -1,1 +1,22 @@
 
+mutated_seer_df %>% 
+  group_by(White_NonWhite, `T Stage`, Status) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  group_by(White_NonWhite, `T Stage`) %>% 
+  mutate(total = sum(n)) %>% 
+  ungroup() %>% 
+  mutate(p_dead = n/total) %>% 
+  select(-c(n, total)) %>% 
+  filter(Status == "Dead") %>% 
+  pivot_wider(names_from = White_NonWhite, values_from = p_dead) %>% 
+  mutate(difference = White - WOC) %>% 
+  ggplot(aes(x = `T Stage`, y = difference)) +
+  geom_col() + ggtitle("Difference in Tumor Stage for Deceased Indviduals") + xlab("Tumor stage") + ylab("Difference")
+
+Chart 3:
+What this deviation plot looks at is the difference in tumor stages for white women and women of color with respect to if their status shows that 
+they’ve passed  from cancer. If the bar chart shows a positive trend it shows that more white women have died compared to women of color for that tumor stage.
+When the bar is going in a negative direction it shows that more women of color have died compared to white women for that tumor stage. We can see that for the 
+first three tumor stages more women of color had died compared to white women. The fourth stage shows that more white women have died compared to women of color
+but that would because most of the cases counted for this dataset died in the early stages causing white women in T4 to be compared to no other variable.
