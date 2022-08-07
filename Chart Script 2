@@ -1,1 +1,19 @@
 
+mutated_seer_df %>% 
+  group_by(White_NonWhite, `T Stage`) %>% 
+  tally() %>% 
+  ungroup() %>% 
+  group_by(White_NonWhite) %>% 
+  mutate(total = sum(n)) %>% 
+  ungroup() %>% 
+  mutate(p = n/total) %>% 
+  select(-c(n, total)) %>% 
+  pivot_wider(names_from = White_NonWhite, values_from = p) %>% 
+  mutate(difference = White - WOC) %>% 
+  ggplot(aes(x = `T Stage`, y = difference)) +
+  geom_col() + ggtitle("Difference in Tumor Stage for Women of Color and White Women") + xlab("Tumor stage") + ylab("Difference")
+  
+  What this bar chart looks  into is the difference in tumor stages for white women and women of color. The difference is calculated by subtracting the number
+  of tumor cases for white and women of color When a bar is pointed upwards it shows that the tumor stage for white women is higher than black women. When the 
+  bar faces downwards in a negative direction, it shows that the tumor stage cases for women of color is higher than white women. We can see that all stages 
+  except for Stage 2 show that white women had higher case counts for those tumor stages. 
