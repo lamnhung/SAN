@@ -1,1 +1,21 @@
 
+library(dplyr)
+library(tidyverse)
+library(ggplot)
+
+seerbreast <- read_csv("seerbreast.csv")
+
+mutated_seer_df <- seerbreast %>% 
+  mutate(White_NonWhite = 
+           case_when(`Race` %in% c("Other (American Indian/AK Native, Asian/Pacific Islander)",
+                                              "Black") ~ "WOC",
+                     `Race` %in% c("White") ~ "White"
+           )
+  )
+ mutated_seer_df %>% with(table(White_NonWhite, `T Stage`)) 
+ 
+ tstage_rate <- mutated_seer_df %>% 
+  with(table(White_NonWhite, `T Stage`)) %>% prop.table(margin=1)
+ggplot(as.data.frame(tstage_rate), aes(x= T.Stage, y=Freq, fill=White_NonWhite)) +
+  geom_bar(stat = "identity", position = "dodge") + ggtitle("Tumor Stages for White Women and Women of Color") + xlab("Tumor Stage") + ylab("Total Frequency")
+ 
