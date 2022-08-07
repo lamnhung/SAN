@@ -19,3 +19,8 @@ mutated_seer_df <- seerbreast %>%
 ggplot(as.data.frame(tstage_rate), aes(x= T.Stage, y=Freq, fill=White_NonWhite)) +
   geom_bar(stat = "identity", position = "dodge") + ggtitle("Tumor Stages for White Women and Women of Color") + xlab("Tumor Stage") + ylab("Total Frequency")
  
+Chart 1:
+What this first chart explains is the proportional data of white and women of color categorized by the tumor stage they’ve been diagnosed with. 
+The total frequency is obtained by adding up all the frequencies of tumor stages from each racial category. What we come to find is that women of color 
+are disproportionately calculated for in this data (meaning that there are fewer observations of them in this dataset)
+
