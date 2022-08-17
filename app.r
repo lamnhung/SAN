@@ -27,7 +27,10 @@ ui <- fluidPage(
                  ),
                  tabPanel("Interactive Page 1"), 
                  tabPanel("Interactive Page 2"),
-                 tabPanel("Interactive Page 3"),
+                 tabPanel("Interactive Page 3",
+                          h1("Difference in Tumor Stage for Deceased Individuals"),
+                          p("This chart attempts to show the disparities in tumor stages between deceased Women of color and White women. This chart prevents the deviation that looks at the differences in tumor stages for white women and women of color with respect to if their status shows that they’ve passed  from cancer. A bar that is above 0.00, a positive trend represents that more white women have died compared to women of color for that specified tumor stage. When the bar is below 0.0, a negative trend, it shows that more women of color have died compared to white women for that tumor stage. The chart shows the first three tumor stages more women of color had died compared to white women. The fourth stage shows that more white women have died compared to women of color but that would because most of the cases counted for this dataset died in the early stages causing white women in T4 to be compared to no other variable.
+")),
                  tabPanel("Summary",
                           h1("Specific Takeaway 1"),
                           p("Insert Specific Takeaway 1"),
