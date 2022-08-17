@@ -10,13 +10,14 @@ library(shinythemes)
 
 #make a variable for the Interactive Page 3 
 
+
 #define the UI
 ui <- fluidPage(
   theme = shinytheme("cosmo"),
   navbarPage("SAN Final Project",
                  tabPanel(
                    "Introduction",
-                   tags$img(src = "IMG_0550.png", height=360, width=600),
+                   tags$img(src = "IMG_0550.png", height=410, width=650),
                    h1("SEER Breast Cancer Dataset" ),
                    p("The purpose of this project is to explore and find disparities within Breast Cancer patients that disproportionately affect women of color. In the health care field, women of color especially black women are disproportionately mistreated, misdiagnosed, and dying because of inherent bias. It is important to look at the differences between women and color and white women to see if there is any disparities between them. By pointing out these disparities we can acknowledge the inherent bias and racisim within our healthcare system."),
                    h3("Questions We Seek to Answer"),
@@ -27,9 +28,7 @@ ui <- fluidPage(
                  tabPanel("Interactive Page 1"), 
                  tabPanel("Interactive Page 2"),
                  tabPanel("Interactive Page 3"),
-                 plotOutput("plot"),
-                 tabPanel(
-                   "Summary",
+                 tabPanel("Summary",
                           h1("Specific Takeaway 1"),
                           p("Insert Specific Takeaway 1"),
                           h2("Notable Data-Insight/Pattern 1"),
@@ -49,8 +48,8 @@ ui <- fluidPage(
 ))
 
 sever <- function(input, output){
-
-}
+ 
+  }
 
 shinyApp(ui = ui, server = sever)
 
