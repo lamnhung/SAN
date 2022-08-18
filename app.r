@@ -2,6 +2,7 @@ library(dplyr)
 library(tidyverse)
 library(ggplot2)
 library(plotly)
+library(shiny)
 library(shinythemes)
 
 #make a variable for the Interactive Page 1
@@ -13,20 +14,14 @@ page3 <- fluidPage(
   titlePanel("Tumor Disparities"), 
   sidebarLayout(
     sidebarPanel(
-      h2("Select"),
       selectInput(
-        inputId = "Race",
+        "Race",
         label = "Select a Race",
-        choices = seerbreast_df$Race
+        choices = c("Black", "White", "Other (American Indian/AK Native, Asian/Pacific Islander)"),
       ),
-      selectInput(
-        inputId="Status",
-        label = "Select Status",
-        choices = seerbreast_df$Status,
-      )
     ),
     mainPanel(
-      plotOutput("scatterPlot"),
+      plotOutput("scatterplot"),
       )
     )
   )
@@ -50,7 +45,8 @@ ui <- fluidPage(
                  tabPanel("Interactive Page 2"),
                  tabPanel("Interactive Page 3", page3,
                           h2("Average Survival Months in Each Race Group"),
-                          plotOutput("bar"),
+                          plotOutput("bar", click = "plot_click"),
+                          verbatimTextOutput("info"),
                           p("The above chart attempts to show the disparity of average survival months in Women of Color compared to White women. We can see that that Black women have the lowest average survival months with breast cancer while White women. Due to the skewness of our data set, it is shown that the other racial group has a higher survival rate but due to the low number of data points on the other racial groups, it is not a significant comparison to make unlike Black women to White Women. Although the dataset has much more data on White women, we can still see the disparity of the black women's survival months being the lowest compared to White women."),
                           h2("Difference in Tumor Stage for Deceased Individuals"),
                           tags$img(src = "Rplot.png", height=410, width=650),
@@ -69,7 +65,7 @@ ui <- fluidPage(
                           )
 ))
 
-sever <- function(input, output){
+server <- function(input, output){
   seerbreast <- read_csv("SEER _Breast_Cancer_Dataset.csv")
   survival <- select(seerbreast, Race, "Survival Months", Status)
   combine_survival <- aggregate(survival$"Survival Months", list(survival$Race), FUN=mean)
@@ -80,8 +76,25 @@ sever <- function(input, output){
   output$bar <- renderPlot({
   barplot(height=Xrename$"Average Survival Months", names.arg=c("Black", "Other", "White"))
   })
+  
+  output$info <- renderText({
+    paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
+  })
+  
+  
+  output$scatterplot <- renderPlot({
+    age_df <- select(seerbreast, Age, Race, "Tumor Size")
+    data = switch(
+      input$Race, 
+      "Black" = subset(age_df, Race == "Black"),
+      "White" = subset(age_df), Race == 'White')
+    "Other (American Indian/AK Native, Asian/Pacific Islander)" = subset(age_df, Race == "Other (American Indian/AK Native, Asian/Pacific Islander)")
+    
+  plot(x = age_df$Age, y=age_df$"Tumor Size")
+  })
+  
 }
 
 
-shinyApp(ui = ui, server = sever)
+shinyApp(ui = ui, server = server)
 
