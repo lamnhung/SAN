@@ -5,26 +5,65 @@ library(plotly)
 library(shiny)
 library(shinythemes)
 
+seerbreast <- read_csv("SEER _Breast_Cancer_Dataset.csv")
+
+deathrates <- read.csv("deathrates.csv")
+deathrates <- subset(deathrates, select=-c(X, X.1, X.2))
+
+mutated_seer_df <- seerbreast %>% 
+  mutate(White_NonWhite = 
+           case_when(`Race` %in% c("Other (American Indian/AK Native, Asian/Pacific Islander)",
+                                   "Black") ~ "WOC",
+                     `Race` %in% c("White") ~ "White"
+                     
+           )
+  )
+
+mutated_seer_df <- mutated_seer_df %>% 
+  mutate(Age_Groups = 
+           case_when(`Age` %in% c("30", "31", "32", "33", "34", "35", "36", 
+                                  "37", "38", "39") ~ "Thirties",
+                     `Age` %in% c("40", "41", "42", "43", "44", "45", "46",
+                                  "47", "48", "49") ~ "Fourties",
+                     `Age` %in% c("50", "51", "52", "53", "54", "55", "56",
+                                  "57", "58", "59") ~ "Fifties", 
+                     `Age` %in% c("60", "61", "62", "63", "64", "65", "66",
+                                  "67", "68", "69") ~ "Sixties"
+           )
+  )
+
+
+
+mutated_seer_df %>% with(table(White_NonWhite, `T Stage`)) 
+
+#,mutated_seer_df %>% with(table(White_NonWhite, Status)) %>% prop.table(margin=1)
+
+mutated_seer_df %>% with(table(White_NonWhite, Age_Groups)) %>% prop.table(margin=1)
+
+age_rates <- mutated_seer_df %>% 
+  with(table(White_NonWhite, `Age_Groups`)) %>% prop.table(margin=1)
+ggplot(as.data.frame(age_rates), aes(x=Age_Groups, y=Freq, fill=White_NonWhite)) +
+  geom_bar(stat = "identity", position = "dodge") + ggtitle("Age of Diagnosis for White Women and Women of Color") + xlab("Age Groups") + ylab("Total Frequency")
+
+
 #make a variable for the Interactive Page 1
 
 #make a variable for the Interactive Page 2
 
 #make a variable for the Interactive Page 3 
 page3 <- fluidPage(
-  titlePanel("Tumor Disparities"), 
+  titlePanel("Breast Cancer Death Rates By State"), 
   sidebarLayout(
     sidebarPanel(
       selectInput(
-        "Race",
-        label = "Select a Race",
-        choices = c("Black", "White", "Other (American Indian/AK Native, Asian/Pacific Islander)"),
+        inputId = "state",
+        label = "Select a State:",
+        c(deathrates$State),
       ),
     ),
-    mainPanel(
-      plotOutput("scatterplot"),
+    mainPanel(plotOutput("barchar")),
       )
     )
-  )
 
 
 #define the UI
@@ -39,15 +78,16 @@ ui <- fluidPage(
                    h3("Questions We Seek to Answer"),
                    p("Is there a correlation between certain factors such as race, marriage or class status? What are the disparities between certain racial groups? Is one group of people disproportionately affected by breast cancer? Why is this certain group disproportionately affected by cancer?"),
                    h3("Our Data Source"),
-                   p("The source of data we are focusing on for this project comes from the SEER Breast Cancer dataset. The SEER Breast Cancer Dataset shows cancer patient's age, race, martial status, stages, grade, tumor size, estrogen/progesterone status, regional node, survival months, and life status (dead or alive). The data is collected by SEER which provides information on population-based cancer statistics. "),
+                   p("The main source of data we are focusing on for this project comes from the SEER Breast Cancer dataset that is found on Kaggle (https://www.kaggle.com/datasets/asdsadasdsadsa/seer-breast-cancer-dataset). The SEER Breast Cancer Dataset shows cancer patient's age, race, martial status, stages, grade, tumor size, estrogen/progesterone status, regional node, survival months, and life status (dead or alive). The data is collected by SEER which provides information on population-based cancer statistics. A secondary data source we will be using is the SEER Cancer Statistics Review (CSR) 1975-2018 (https://seer.cancer.gov/archive/csr/1975_2018/browse_csr.php?sectionSEL=1&pageSEL=sect_01_table.20) which shows many different cancer type statistics but we will only be focusing on the breast cancer statistics. This specific dataset displays the death rate per 100,000 per race group."),
                  ),
                  tabPanel("Interactive Page 1"), 
-                 tabPanel("Interactive Page 2"),
+                 tabPanel("Interactive Page 2"), 
                  tabPanel("Interactive Page 3", page3,
-                          h2("Average Survival Months in Each Race Group"),
+                          p("The above interactive chart displays the Age vs Tumor Sizes for each racial group."),
+                          h2("Average Breast Cancer Death Rate per 100,000 in Each Race Group"),
                           plotOutput("bar", click = "plot_click"),
                           verbatimTextOutput("info"),
-                          p("The above chart attempts to show the disparity of average survival months in Women of Color compared to White women. We can see that that Black women have the lowest average survival months with breast cancer while White women. Due to the skewness of our data set, it is shown that the other racial group has a higher survival rate but due to the low number of data points on the other racial groups, it is not a significant comparison to make unlike Black women to White Women. Although the dataset has much more data on White women, we can still see the disparity of the black women's survival months being the lowest compared to White women."),
+                          p("The above chart attempts to show the disparity of average death rates of breast cancer in WOC, especially black women. We can see the huge discrepency between the death rate of white and black women for breast cancer. This is especially important to notice that although it seems that the other WOC groups seem lower than White women, we need to remember the density of each population. White women are far more abundanct compared to the other racial groups yet, black women die of breast cancer at much higher rates. This should be concerning becuase this suggest that they are being disproportionately affected. Point and click on the bar chart to reveal more detailed values of the death rate per 100,000. The detailed values will appear at the y = the death rate."),
                           h2("Difference in Tumor Stage for Deceased Individuals"),
                           tags$img(src = "Rplot.png", height=410, width=650),
                           p("This chart attempts to show the disparities in tumor stages between deceased Women of color and White women. This chart prevents the deviation that looks at the differences in tumor stages for white women and women of color with respect to if their status shows that they’ve passed  from cancer. A bar that is above 0.00, a positive trend represents that more white women have died compared to women of color for that specified tumor stage. When the bar is below 0.0, a negative trend, it shows that more women of color have died compared to white women for that tumor stage. The chart shows the first three tumor stages more women of color had died compared to white women. The fourth stage shows that more white women have died compared to women of color but that would because most of the cases counted for this dataset died in the early stages causing white women in T4 to be compared to no other variable.
@@ -66,35 +106,20 @@ ui <- fluidPage(
 ))
 
 server <- function(input, output){
-  seerbreast <- read_csv("SEER _Breast_Cancer_Dataset.csv")
-  survival <- select(seerbreast, Race, "Survival Months", Status)
-  combine_survival <- aggregate(survival$"Survival Months", list(survival$Race), FUN=mean)
-  survival <- select(seerbreast, Race, "Survival Months", Status)
-  combine_survival <- aggregate(survival$"Survival Months", list(survival$Race), FUN=mean)
-  race_rename <- rename(combine_survival, Race = Group.1)
-  Xrename <- rename(race_rename, "Average Survival Months" = x)
+  
+  cancer <- read.csv("canceractual.csv")
+  cancer <- subset(cancer, select=-c(X, X.1, X.2, X.3, X.4))
   output$bar <- renderPlot({
-  barplot(height=Xrename$"Average Survival Months", names.arg=c("Black", "Other", "White"))
+    barplot(height=cancer$"Death.Rate", names.arg=c("Total", "White", "Black", "AI/AK", "API", "Hispanic", "W-Hispanic"))
   })
-  
-  output$info <- renderText({
-    paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
+  data <- reactive({
+    req(input$state)
+    group_by(Race)
   })
-  
-  
-  output$scatterplot <- renderPlot({
-    age_df <- select(seerbreast, Age, Race, "Tumor Size")
-    data = switch(
-      input$Race, 
-      "Black" = subset(age_df, Race == "Black"),
-      "White" = subset(age_df), Race == 'White')
-    "Other (American Indian/AK Native, Asian/Pacific Islander)" = subset(age_df, Race == "Other (American Indian/AK Native, Asian/Pacific Islander)")
-    
-  plot(x = age_df$Age, y=age_df$"Tumor Size")
+  output$barchar <- renderPlot({
+    g <- ggplot(data(), aes(y=Death.Rate, X = Race))
   })
-  
 }
-
 
 shinyApp(ui = ui, server = server)
 
