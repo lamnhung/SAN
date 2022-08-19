@@ -7,8 +7,9 @@ library(shinythemes)
 
 seerbreast <- read_csv("SEER _Breast_Cancer_Dataset.csv")
 
-deathrates <- read.csv("deathrates.csv")
-deathrates <- subset(deathrates, select=-c(X, X.1, X.2))
+deathrates_df <- read.csv("cancer.csv")
+death_df <- select(deathrates_df, State, Types.Breast.Total, Types.Breast.Race.White, Types.Breast.Race.White.non.Hispanic., Types.Breast.Race.Black, Types.Breast.Race.Black.non.Hispanic, Types.Breast.Race.Asian, Types.Breast.Race.Indigenous, Types.Breast.Race.Hispanic)
+
 
 mutated_seer_df <- seerbreast %>% 
   mutate(White_NonWhite = 
