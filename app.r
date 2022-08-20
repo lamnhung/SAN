@@ -54,7 +54,6 @@ age_rates <- mutated_seer_df %>%
 ggplot(as.data.frame(age_rates), aes(x=Age_Groups, y=Freq, fill=White_NonWhite)) +
   geom_bar(stat = "identity", position = "dodge") + ggtitle("Age of Diagnosis for White Women and Women of Color") + xlab("Age Groups") + ylab("Total Frequency")
 
-deathrates <- read.csv("deathrates.csv")
 deathrates_df <- read.csv("cancer.csv")
 death_df <- select(deathrates_df, State, Types.Breast.Total, Types.Breast.Race.White, 
                    Types.Breast.Race.White.non.Hispanic., Types.Breast.Race.Black, 
