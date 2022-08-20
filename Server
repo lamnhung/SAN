@@ -1,0 +1,75 @@
+
+server <- function(input, output){
+  output$barplot <- renderPlotly({
+    if(input$Race == "Both"){
+      ggplot(as.data.frame(age_rates), aes(x=Age_Groups, y=Freq, fill=White_NonWhite)) +
+        geom_bar(stat = "identity", position = "dodge") + 
+        labs(x="Tumor Stage", y="Total Frequency",
+             title = "Age of Diagnosis for White women and Women of Color",
+             fill = "Race")
+    } else if (input$Race == "White"){
+      filter_df <- filter(as.data.frame(age_rates), White_NonWhite == "White")
+      ggplot(data = filter_df, aes(x=Age_Groups, y=Freq)) + 
+        geom_bar(stat = "identity", position = "dodge", fill = "coral1") + 
+        ggtitle("Age of Diagnosis for White Women and Women of Color") + 
+        xlab("Age Groups") + ylab("Total Frequency")
+    }
+    else{
+      filter_df <- filter(as.data.frame(age_rates), White_NonWhite == "WOC")
+      ggplot(data = filter_df, aes(x=Age_Groups, y=Freq)) + 
+        geom_bar(stat = "identity", position = "dodge", fill = "cadetblue2") + 
+        ggtitle("Age of Diagnosis for White Women and Women of Color") + 
+        xlab("Age Groups") + ylab("Total Frequency")
+    }
+  }) 
+  
+  output$barchart <- renderPlotly({
+    ggplot(as.data.frame(tstage_rate), aes(x= T.Stage, y=Freq, fill=White_NonWhite)) +
+      geom_bar(stat = "identity", position = "dodge") +
+      labs(x = "Tumor Stage", y = "Total Frequency",
+           title = "Tumor Stages for White Women and Women of Color",
+           fill = "Race")
+  })
+  
+  output$tumortalk <- renderText(
+    if (input$tumorstage == "T1"){
+      return("Tumor stage one (T1) describes invasive breast cancer; the cancer cells are breaking through to or invading normal surrounding breast tissues. Stage I is divided into two subcategories: IA and IB. 
+
+Breast cancer in the first tumor stage (T1) is invasive; the cancer cells have damaged or invaded the normal surrounding breast tissues. IA and IB are the two subgroups of Stage 1. 
+
+Stage IA often refers to invasive breast cancer with a tumor up to 2 cm in size, no lymph nodes affected, and no external spread of cancer outside the breast. Invasive breast cancer is also referred to as stage IB when there is no tumor in the breast but instead, tiny clusters of cancer cells measuring 0.2-2 millimeters are discovered in the lymph nodes. Additionally, if there are little clusters of cancer cells in the lymph nodes that are 0.2-2 millimeters in size, there may be a tumor in the breast that is less than 2 cm in size. This stage is more common which makes sense in the chart because the frequency difference between WOC and White women is not that large.  ")
+    } else if (input$tumorstage == "T2"){
+      return("Tumor stage two (T2 ) describes invasive breast cancer; the cancer cells are breaking through to or invading normal surrounding breast tissues. Stage 2 is divided into two subcategories: IIA and IIB. 
+
+Invasive breast cancer is classified as stage IIA if there is no detectable tumor in the breast but cancer larger than 2 millimeters is discovered in one to three axillary lymph nodes (under the arm) or in the lymph nodes close to the breast bone during a sentinel node biopsy. The axillary lymph nodes can be affected by the tumor, which has a diameter of less than 2 cm. The tumor may also range in size from 2 to 5 cm and have not spread to the axillary lymph nodes. Additionally, Invasive breast cancer is classified as stage IIB if the tumor is between 2 and 5 centimeters in size or between 0.22 and 2.25 millimeters in the lymph nodes, between 2 and 5 centimeters in size and the cancer has spread to 1-3 axillary lymph nodes or to lymph nodes close to the breastbone discovered during a sentinel node biopsy, or if the tumor is greater than 5 centimeters in size but has not yet reached the axillary lymph nodes. ")
+    } else if (input$tumorstage == "T3"){
+      return("Tumor stage three (T3 ) describes invasive breast cancer; the cancer cells are breaking through to or invading normal surrounding breast tissues. Stage 3 is divided into three subcategories: IIIA IIIB, and IIIC.
+
+Stage IIIA breast cancer is characterized by the presence of 4-9 axillary lymph nodes or lymph nodes close to the breastbone, or the absence of a tumor in the breast or the presence of a tumor of any size (found during imaging tests or a physical exam) or the tumor is > 5 cm; tiny clusters of breast cancer cells, measuring between 0.2-2 millimeters, are discovered in the lymph nodes; or the tumor is > than 5 cm; the cancer has progressed to 1-3 axillary lymph nodes; or to the lymph nodes close to the breastbone (found during a sentinel lymph node biopsy)
+
+Stage IIIB often refers to invasive breast cancer that has advanced to the chest wall, breast skin, and/or produced edema or an ulcer. It may also have spread up to nine axillary lymph nodes or to lymph nodes close to the breastbone. Breast cancer that is inflammatory is regarded as being at least stage IIIB. The breast feels warm and may be swollen; cancer cells have spread to the lymph nodes; and they may be discovered in the skin. These are typical symptoms of inflammatory breast cancer.
+
+Stage IIIC generally refers to invasive breast cancer in which there may be no symptoms of the disease or, if there is a tumor (it may be of any size) have spread to the chest wall and/or the breast skin, and have affected 10+ axillary lymph nodes, lymph nodes above or below the collarbone, axillary lymph nodes, or lymph nodes close to the breastbone.
+")
+    }
+    else{
+      return("Stage four (T4) describes invasive breast cancer that has reached other body organs, such as the lungs, distant lymph nodes, skin, bones, liver, or brain, in addition to the breast and surrounding lymph nodes. T4 stage has four classes: T4a, T4b,T4c, and T4c. T4a means the tumor has spread into the chest walls. T4b means the tumor has spread into the skin. T4c menas the tumor has spread to both the skin and chest wall. T4c means the tumor is now a inflammatrory carcinoma. T4 is pretty serious and likely results in a death sentence/a much lower survival rate. The frequency isn't as high but we can see that WOC tend to be lower in most of the stages.This suggests that WOC are dying much earlier hence the difference between White and WOC.")
+    }
+  )
+  
+  output$usmap <- renderPlotly({
+    plot_usmap(data = cancer %>% filter(Race == input$racegroup),
+               values = "Rate",
+               regions = "states",
+               # color of the state borders
+               color = "grey70") +
+      scale_fill_continuous(low = "white", high = "blue",
+                            name = "Breast cancer death rate (%)",
+                            label = scales::comma) +
+      labs(title = "Breast Cancer Death Rates per 100,000 by State and Racial group",
+           subtitle = "") +
+      theme(legend.position = "right")
+  })
+}
+
+shinyApp(ui = ui, server = server)
